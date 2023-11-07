@@ -14,7 +14,6 @@ use App\Models\Master_Tables;
 use LaravelDaily\LaravelCharts\Classes\LaravelChart;
 use App\Models\Chart;
 use DB;
-use Session;
 use Schema;
 
 class HomeController extends Controller
@@ -35,6 +34,7 @@ class HomeController extends Controller
         Data_2_Calculation::truncate();
         Data_3_Calculation::truncate();
 
+        /* We can process the data in iteration too */
         /* Data calculation for Table 1 */
 
         $Details1 = Data_1::all();
@@ -113,7 +113,8 @@ class HomeController extends Controller
 
         echo "<br> Preparing Data for Table 3....";
        
-        /* Table 3 has 25k values so can use array chunk to speed up the performance */
+        /* Table 3 has up to 25k values so can use array chunk to speed up the performance */
+
         if(count($Details3) >= 5000)
         {
             $chunks = array_chunk($Details3,'5000');
@@ -156,12 +157,12 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    /* function for rendering chart to show the calculated data */
+    /* function for rendering chart and table to show the calculated data */
     public function showData()
     {
-
+        /* Have used any Server method so need to find the HTTP method */
         $method = $_SERVER['REQUEST_METHOD'];
-           
+        /* Declare all values intially to load the page using GET */  
         $period = "";
         $tableName = "";
         $showChart = 0;
@@ -171,6 +172,7 @@ class HomeController extends Controller
         $tableHeaders ="";
         $colours = array();
 
+        /* If the method is POST it will be retrieved the user inputs */
         if($method == 'POST' && !empty($_POST))
         {
             $period = $_POST["periodicity"];
@@ -180,6 +182,7 @@ class HomeController extends Controller
                 $finalTableName = $this->getTableName($tableName);
                 $finalTableName = isset($finalTableName[0]) && $finalTableName[0] !== "" ? $finalTableName[0] : "";
 
+                /* Define values to fetch data as per user inputs */
                 if($period == 'daily'){
                     $selectValue = "date";
                 }
@@ -187,28 +190,29 @@ class HomeController extends Controller
                     $selectValue = "week"; 
                 }
 
-
-
+                /* Get values from table for table heders ad rows */
                 $tableHeaders = DB::connection()->getSchemaBuilder()->getColumnListing($finalTableName);
                 $tableRowValues = DB::table($finalTableName)->get()->toArray();
 
+                /* Get data to load chart by using user inputs such as table name and period */
                 $chartData = DB::table($finalTableName)->select($selectValue, DB::raw('count(*) as total'))
                 ->groupBy($selectValue)
                 ->pluck('total',$selectValue)
                 ->toArray();
                 
-                // Generate random colours for the chartData
-                for ($i=0; $i<=count($chartData); $i++) {
-                            $colours[] = '#' . substr(str_shuffle('ABCDEF0123456789'), 0, 6);
-                        }
+                // Generate random colours for the chartData for styling //
+                for($i=0; $i<=count($chartData); $i++) 
+                {
+                    $colours[] = '#' . substr(str_shuffle('ABCDEF0123456789'), 0, 6);
+                }
                       
-                // Prepare the data for returning with the view
+                // Prepare the data set for returning with the chart view //
                 $chart = new Chart;
                 $chart->labels = (array_keys($chartData));
                 $chart->dataset = (array_values($chartData));
                 $chart->colours = $colours;
 
-                // $chart1 = new LaravelChart($chart_options);
+                // If User input is empty chart and table will not be loaded//
                 if($period !== "" && $tableName !== ""){
                     $showChart = 1;
                 }
@@ -216,13 +220,13 @@ class HomeController extends Controller
             else {
                 echo "Table Not found"; exit;
             }
-           
-
         }
         
         return view('show_data',compact('chart'),['tableData' => $tableData,"period"=>$period,"tableName"=>$tableName,"showChart"=>$showChart,"tableHeaders" => $tableHeaders,"tableRowValues"=>$tableRowValues,"colours"=>$colours]);
     }
 
+
+    /* This function is used to get the final data calcultaed table name from the source table name */
     public function getTableName($tableName)
     {
         $tableData = "";
@@ -232,7 +236,6 @@ class HomeController extends Controller
         }
         
         return $tableData;
-
     }
 
 }

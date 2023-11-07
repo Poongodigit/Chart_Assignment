@@ -13,7 +13,7 @@
 <div class="row justify-content-center mt-5">
     <div class="col-md-8">
         <div class="card">
-            <div class="card-header">Register</div>
+            <div class="card-header">Load Chart and Table</div>
                 <div class="card-body">
                 <form action="{{ route('show_data') }}" method="post">
                     @csrf
@@ -49,7 +49,8 @@
     </div>
 </div>
 
-<br> </br>
+<br> </br> 
+<!--  Show chart only the controller function return true with user inputs -->
 <?php if($showChart == 1) { ?>
 <div class="container" id="chartStyle">
     <div class="row">
@@ -63,12 +64,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-    <!-- CHARTS -->
+    <!-- Rendering CHARTS -->
     <script>
         var ctx = document.getElementById('userChart').getContext('2d');
         var chart = new Chart(ctx, 
         {
-            // The type of chart we want to create
+            // The type of chart we want to create we can change the type to line, pie too
             type: 'bar',
             // The data for our dataset
             data: {
@@ -96,9 +97,6 @@
 <body style="margin:20px auto"> 
 <div class="container">
 <table id="finalTable" class="table table-striped">
-    <script>
-        $('#finalTable').dataTable();
-    </script>
     <thead>
         <tr>
             <?php foreach($tableHeaders as $head){ 
@@ -124,9 +122,9 @@
         <?php $i++; } ?>
     </tbody>          
 </table>
+<script>
+    $('#finalTable').dataTable();
+</script>
 
 <?php } ?>
-
-
-    
 @endsection
