@@ -1,66 +1,82 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## About the project Calculate Data and Chart Rendering
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+   This is a project to calculate the data as per client requirement and view the data as chart and table according to the inputs from user which are table name and periodicity (weekly and daily).
+   
+** Step1 ** 
+    Download and install laravel project
+	Canu use artisan commands to create a new project in our local system 
+	In my local system project has created and named as Chart_Assignment
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+** Step2 ** 
+	Here client has shared the tables so i have directly imported the files to my DB 
+	Or else we can create tables using the following command
+	- php artisan migrate
+ 
+    - Have attached the DB sql file to export the tables in location => database\migrations\assignment.sql
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+** Step3 **
+	- routes\web.php
+	Create routes for calculate data and show chart
+	
+Before start to execute the urls run the following command to initiate the server on local host
+- php artisan serve
+  
+** Step4 ** 
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+	- [dataCalculation, calculate the data as per in the sample excel sheet](http://localhost/{project name as per in your directory}/public/data_calculation).
+	
+	- App\Http\Controllers\HomeController => dataCalculation
 
-## Learning Laravel
+	# Needed data
+		+ Table1 data - data12298
+		+ Table2 data - data12335
+		+ Table3 data - data12765
+	
+	- In this function data fetched from the sample tables and processed to calculate the diff column values and convert the timestamp data to date and stored in a new table named as Data_1_Calculation,.. and iterated for all tables and saved in three difffernt tables (as per sample threee tables are there)
+		
+  
+** Step 5 **
+	- [Show chart and table, show data in chart and table by using user inputs ](http://localhost/{project name as per in your directory}/public/show_data).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+	- App\Http\Controllers\HomeController => showData
+	
+	- Master tables table has created in DB for havinga the source table names.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+	- While loaded the page users need to select both table name and periodicity values from the drop down before submit
+	
+	- After submit needed parameters to load the chart and table in same page
+	
+	# Parameters
+		+ table (sample table names will be in drop down)
+		+ period (Daily, Weekly)
+		+ csrf token
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+** Step6 **
+    - After submit the function again called showData
 
-## Laravel Sponsors
+    - Have used chart.js for view the chart data 
+	
+	- Have fetched data from calculated data table form the above steps (Data_1_Calculation,..) along with the user inputs table name and period
+    
+	- Data set has prepared to load the chart and table
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+ 	- The page has reloaded with the drop down values and with chart and table 
 
-### Premium Partners
+	- We can change the values of drop down and can submit again with the new given values
+	
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+
+
+
+
